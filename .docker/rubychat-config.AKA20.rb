@@ -16,26 +16,21 @@
 # License along with QED-Chat.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-<VirtualHost *:443>
-    ServerName  192.168.3.120
-    ServerAlias 192.168.3.120
-  
-    DocumentRoot /www
+# Geaenderte Konfiguration in rubychat-config.rb speichern
 
-    SSLEngine On
-    SSLCertificateFile	/etc/ssl/certs/selfsigned.crt
-	SSLCertificateKeyFile /etc/ssl/private/selfsigned.key
+$sqlConfig = {:adapter => "mysql2", :host => "mysql_chat",
+	:database => "chat", :username => "root", :password => "0nL9a3nR8sV5ODtQfNs463ssKLpo19Lf"}
 
-    <Location />
-        Require all granted
-    </Location>
+$scgiPort = 20000
+$wsPort = 21000 
 
-    Redirect permanent /ws /
+$wsPingInterval = 60
+$wsFailsToTimeout = 3
 
-    ProxyPass /rubychat/ scgi://localhost:20000/
+$hostname = "192.168.3.120" #Muss geaendert werden, z.B. localhost fuer lokales Testen
 
-    ProxyPass /websocket ws://localhost:21000/
-    ProxyPassReverse /websocket ws://localhost:21000/
+$secureCookies = true #False, falls lokal entwickelt wird (ohne https)
 
-    ProxyRequests Off
-</VirtualHost>
+$tokenExpirationSeconds = 3600 * 24 * 90
+$tokenExpirationLeeway = 30
+$tokenSecret = "topsecret"

@@ -37,6 +37,10 @@ if [ -z ${CHAT_HTTP_PORT} ];
 then export CHAT_HTTP_PORT=5000;
 fi;
 
+if [ -z ${CHAT_HTTPS_PORT} ];
+then export CHAT_HTTPS_PORT=5050;
+fi;
+
 if [[ $EUID -ne 0 ]]; then
    echo "This script normally needs root"
 fi
@@ -69,4 +73,4 @@ docker exec -i $MYSQL_CONTAINER_NAME mysql -u root -p$PASSWORD_MYSQL chat < sche
 docker exec -i $MYSQL_CONTAINER_NAME mysql -u root -p$PASSWORD_MYSQL chat < .docker/sampledata.sql
 
 echo "Starting chat..."
-docker run -d --name=$CHAT_CONTAINER_NAME --restart=always --network=$CHAT_NETWORK_NAME -p $CHAT_HTTP_PORT:80 qed/chat
+docker run -d --name=$CHAT_CONTAINER_NAME --restart=always --network=$CHAT_NETWORK_NAME -p $CHAT_HTTP_PORT:80 -p $CHAT_HTTPS_PORT:443 qed/chat

@@ -46,8 +46,10 @@ RUN apt-get update && apt-get install -y \
 ADD . /code
 WORKDIR /code
 
-COPY .docker/rubychat-config.TESTINGONLY.rb /etc/chat/rubychat-config.rb
+COPY .docker/rubychat-config.AKA20.rb /etc/chat/rubychat-config.rb
 COPY .docker/000-default.conf /etc/apache2/sites-enabled/
+#COPY .docker/default-ssl.conf /etc/apache2/sites-enabled/
+#COPY .docker/ssl-params.conf /etc/apache2/conf-enabled/
 
 COPY .docker/docker_start.sh .
 RUN chmod u+x docker_start.sh
@@ -55,6 +57,12 @@ RUN chmod u+x docker_start.sh
 COPY public_html/ /www
 RUN chown www-data.www-data -R /www
 
+COPY cert/selfsigned.key /etc/ssl/private/selfsigned.key
+COPY cert/selfsigned.crt /etc/ssl/certs/selfsigned.crt
+
 EXPOSE 80
+EXPOSE 443
+
+RUN a2enmod ssl
 
 CMD [ "./docker_start.sh" ]
